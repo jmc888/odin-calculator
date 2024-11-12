@@ -1,0 +1,27 @@
+#display {
+    width: 100px;
+    height: 30px;
+    background-color: azure;
+}
+
+.numbers {
+    width: 30px;
+    height: 30px;
+    background-color: aquamarine;
+    border: .1em solid black;
+}
+
+.operators {
+    width: 30px;
+    height: 30px;
+    background-color:bisque;
+    border: .1em solid black;
+
+}
+
+.equals {
+    width: 30px;
+    height: 30px;
+    background-color: darkcyan;
+    border: .1em solid black;
+}
