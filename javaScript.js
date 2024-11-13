@@ -22,10 +22,10 @@ operate = (callback, a, b) => {
 reset = () => {
     currentResult = 0;
     currentNum = 0; 
-    currentNumArr.splice(0);
     numsArr.splice(0);
     opsArr.splice(0);
     opsArr.push(add);
+    display.textContent = currentResult;
 }
 
 let currentResult = 0;
@@ -49,23 +49,25 @@ numbers.forEach(element => {
     element.addEventListener("click", (event) => {
         const num = event.target.textContent;
         currentNumArr.push(num);
-
         display.textContent = parseInt(currentNumArr.join(""));
-        console.log(currentNumArr);
     })
 });
 
 
 opsLvl1.forEach(element => {
     element.addEventListener("click", () => {
-        if (opsArr.length == 0 && currentNumArr.length > 0) {
+        if (opsArr.length == 0 && currentNumArr.length > 0){
             reset();
-        }
+        } else if (currentNumArr.length == 0) {
+            currentNum = currentResult;
+            if (opsArr.length > 0) {
+                opsArr.pop();
+            }
+        } 
         numsArr.push(currentResult);
-        if (currentNumArr.length > 0) {
-            currentNum = parseInt(currentNumArr.join(""));
-            numsArr.push(currentNum);
-        }
+        if (opsArr.length > 0 && currentNumArr.length > 0) {
+            numsArr.push(parseInt(currentNumArr.join("")));
+        } 
 
         currentOp = element.id == "add"? add: subtract;
 
@@ -88,10 +90,11 @@ opsLvl2.forEach(element => {
     element.addEventListener("click", () => {
         currentOp = element.id == "multiply"? multiply: divide;
         numsArr.push(currentResult);
-        if (opsArr.length > 0 && currentNumArr.length > 0 ) {
-            currentNum = parseInt(currentNumArr.join(""));
-            numsArr.push(currentNum);
-        } 
+
+        if (opsArr.length > 0) {
+            numsArr.push(parseInt(currentNumArr.join("")));
+        }
+
         while (opsArr.length > 1) {
             const operator  = opsArr.pop();
             const lastNum = numsArr.pop();
@@ -113,7 +116,6 @@ equals.addEventListener("click", () => {
     numsArr.push(currentResult);
     if (currentNumArr.length > 0) {
         currentNum = parseInt(currentNumArr.join(""));
-        numsArr.push(currentNum);
     } 
     numsArr.push(currentNum)
     
