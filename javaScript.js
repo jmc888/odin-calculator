@@ -50,7 +50,6 @@ numbers.forEach(element => {
         const num = event.target.textContent;
         currentNumArr.push(num);
         display.textContent = parseInt(currentNumArr.join(""));
-        console.log(currentNumArr);
     })
 });
 
@@ -60,7 +59,6 @@ ops.forEach(element => {
 
         // A `=` press followed by a number input
         if (opsArr.length == 0 && currentNumArr.length > 0){ 
-            console.log("I was reset");
             reset();
         // No number input before operation
         } else if (currentNumArr.length == 0) { 
@@ -72,20 +70,15 @@ ops.forEach(element => {
         // Operation does not immediately follow a `=` press
         // And a number input is detected before operation
         if (opsArr.length > 0 && currentNumArr.length > 0) {
-            console.log("successfully pushed");
             numsArr.push(parseInt(currentNumArr.join("")));
         } 
         
         const opDivId = element.id;
         const opLvl = BASE_LVL_OPERATORS.includes(opDivId) ? 0: 1;
-        console.log(opsArr);
 
         currentOp = OP_STRING_TO_FUNCTION[opDivId];
 
         while (opsArr.length > opLvl) {
-            console.log("I'm here");
-            console.log(numsArr);
-
             const operator  = opsArr.pop();
             const lastNum = numsArr.pop();
             const prevNum = numsArr.pop();
