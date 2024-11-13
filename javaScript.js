@@ -11,9 +11,7 @@ multiply = (a, b) => {
 }
 
 divide = (a, b) => {
-    if (b == 0) {
-        return "Error";
-    }
+
     return a / b;
 }
 
@@ -21,10 +19,20 @@ operate = (callback, a, b) => {
     return callback(a, b);
 }
 
+reset = () => {
+    currentResult = 0;
+    currentNum = 0; 
+    currentNumArr.splice(0);
+    numsArr.splice(0);
+    opsArr.splice(0);
+    opsArr.push(add);
+}
+
 let currentResult = 0;
 let currentOp = add;
+let currentNum = 0; 
 
-const currentNum = [];
+const currentNumArr = [];
 const numsArr = [];
 const opsArr = [add];
 const FIRST_LVL_OPERATORS = [add, subtract];
@@ -40,19 +48,25 @@ equals = document.getElementById("equals");
 numbers.forEach(element => {
     element.addEventListener("click", (event) => {
         const num = event.target.textContent;
-        currentNum.push(num);
+        currentNumArr.push(num);
 
-        display.textContent = parseInt(currentNum.join(""));
+        display.textContent = parseInt(currentNumArr.join(""));
+        console.log(currentNumArr);
     })
 });
 
 
 opsLvl1.forEach(element => {
     element.addEventListener("click", () => {
-        numsArr.push(currentResult);
-        if (opsArr.length > 0) {
-            numsArr.push(parseInt(currentNum.join("")));
+        if (opsArr.length == 0 && currentNumArr.length > 0) {
+            reset();
         }
+        numsArr.push(currentResult);
+        if (currentNumArr.length > 0) {
+            currentNum = parseInt(currentNumArr.join(""));
+            numsArr.push(currentNum);
+        }
+
         currentOp = element.id == "add"? add: subtract;
 
         while (opsArr.length > 0) {
@@ -64,9 +78,8 @@ opsLvl1.forEach(element => {
         opsArr.push(currentOp);
 
         currentResult = numsArr.pop();
-        console.log(currentResult);
         display.textContent = currentResult;
-        currentNum.splice(0);
+        currentNumArr.splice(0);
 
     })
 });
@@ -75,10 +88,10 @@ opsLvl2.forEach(element => {
     element.addEventListener("click", () => {
         currentOp = element.id == "multiply"? multiply: divide;
         numsArr.push(currentResult);
-        if (opsArr.length > 0) {
-            numsArr.push(parseInt(currentNum.join("")));
-        }
-
+        if (opsArr.length > 0 && currentNumArr.length > 0 ) {
+            currentNum = parseInt(currentNumArr.join(""));
+            numsArr.push(currentNum);
+        } 
         while (opsArr.length > 1) {
             const operator  = opsArr.pop();
             const lastNum = numsArr.pop();
@@ -89,17 +102,21 @@ opsLvl2.forEach(element => {
         opsArr.push(currentOp);
 
         currentResult = numsArr.pop();
-        console.log(currentResult);
 
         display.textContent = currentResult;
-        currentNum.splice(0);
+        currentNumArr.splice(0);
 
     })
 });
 
 equals.addEventListener("click", () => {
     numsArr.push(currentResult);
-    numsArr.push(parseInt(currentNum.join("")));
+    if (currentNumArr.length > 0) {
+        currentNum = parseInt(currentNumArr.join(""));
+        numsArr.push(currentNum);
+    } 
+    numsArr.push(currentNum)
+    
     if (opsArr.length == 0) {
         const lastNum = numsArr.pop();
         const prevNum = numsArr.pop();
@@ -114,7 +131,14 @@ equals.addEventListener("click", () => {
     }
 
     currentResult = numsArr.pop();
+    console.log("ops");
     console.log(opsArr);
+    console.log("nums");
     console.log(numsArr);
+    console.log("currNumArr");
+    console.log(currentNumArr);
     display.textContent = currentResult;
+    console.log("currNum");
+    console.log(currentNum);
+    currentNumArr.splice(0);
 })
