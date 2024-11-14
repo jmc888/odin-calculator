@@ -43,52 +43,56 @@ numbers = document.querySelectorAll(".numbers");
 display = document.getElementById("display");
 ops = document.querySelectorAll(".operators");
 equals = document.getElementById("equals");
-
+clear = document.getElementById("clear");
 
 numbers.forEach(element => {
     element.addEventListener("click", (event) => {
         const num = event.target.textContent;
         currentNumArr.push(num);
         display.textContent = parseInt(currentNumArr.join(""));
+        clear.textContent = "C";
     })
 });
 
 
 ops.forEach(element => {
     element.addEventListener("click", () => {
+        const opDivId = element.id;
+        const opLvl = BASE_LVL_OPERATORS.includes(opDivId) ? 0: 1;
+        currentOp = OP_STRING_TO_FUNCTION[opDivId];
 
         // A `=` press followed by a number input
         if (opsArr.length == 0 && currentNumArr.length > 0){ 
             reset();
-        // No number input before operation
-        } else if (currentNumArr.length == 0) { 
-            currentNum = currentResult;
-        } 
+        }
 
         numsArr.push(currentResult);
 
-        // Operation does not immediately follow a `=` press
-        // And a number input is detected before operation
+        // No number input before operation
+        if (currentNumArr.length == 0) { 
+            currentNum = currentResult;
+            if (opsArr.length > 0) {
+                opsArr.pop();
+            }
+        } 
+
+        // Operation input does not immediately follow a `=` press
+        // And a number input is detected before the operation input
         if (opsArr.length > 0 && currentNumArr.length > 0) {
             numsArr.push(parseInt(currentNumArr.join("")));
-        } 
         
-        const opDivId = element.id;
-        const opLvl = BASE_LVL_OPERATORS.includes(opDivId) ? 0: 1;
+            while (opsArr.length > opLvl) {
+                const operator  = opsArr.pop();
+                const lastNum = numsArr.pop();
+                const prevNum = numsArr.pop();
+                numsArr.push(operate(operator, prevNum, lastNum));
+            }
+        } 
 
-        currentOp = OP_STRING_TO_FUNCTION[opDivId];
-
-        while (opsArr.length > opLvl) {
-            const operator  = opsArr.pop();
-            const lastNum = numsArr.pop();
-            const prevNum = numsArr.pop();
-            numsArr.push(operate(operator, prevNum, lastNum));
-        }
         opsArr.push(currentOp);
-
         currentResult = numsArr.pop();
-        display.textContent = currentResult;
         currentNumArr.splice(0);
+        display.textContent = currentResult;
 
     })
 });
@@ -120,4 +124,18 @@ equals.addEventListener("click", () => {
     currentResult = numsArr.pop();
     display.textContent = currentResult;
     currentNumArr.splice(0);
+})
+
+clear.addEventListener("click", ()=> {
+    if (clear.textContent == "C") {
+        currentNumArr.splice(0);
+        // Clear after `=` press to also result current result
+        if (opsArr == 0) {
+            currentResult = 0;
+        }
+        display.textContent = 0;
+        clear.textContent = "AC";
+    } else {
+        reset();
+    }
 })
