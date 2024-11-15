@@ -44,6 +44,7 @@ div {
     justify-content: center;
     align-items: center;
     margin: 3px;
+    user-select: none;
 }
 
 #zero {
