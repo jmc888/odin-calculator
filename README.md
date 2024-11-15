@@ -13,8 +13,8 @@ This calculator should behave the same as the simple calculator on your iOS devi
 - Handle order of operations elegantly before a `=` button is clicked, that multiply and divide have higher precedence than add and subtract.
 - Handle divide by 0 error elegantly even when the error happen within the operation chain.
 - A clear `C` button to clear out the current input or `AC` to reset the calculator.
-- A `+/-` utility button to quickly convert the current display result or input from positive values to negative values. (Not yet!)
-- A `%` utility button to quickly convert the current display result or input from percentage to decimals. (Not yet!)
+- A `+/-` utility button to quickly convert the current display result or input from positive values to negative values.
+- A `%` utility button to quickly convert the current display result or input from percentage to decimals.
 
 ### User Input Edge Cases
 
