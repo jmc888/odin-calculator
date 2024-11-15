@@ -30,7 +30,8 @@ reset = () => {
 
 let currentResult = 0;
 let currentOp = add;
-let currentNum = 0; 
+let currentNum = 0;
+let percentageOverwrite = 1;
 
 const currentNumArr = [];
 const numsArr = [];
@@ -94,7 +95,7 @@ ops.forEach(element => {
         // Operation input does not immediately follow a `=` press
         // And a number input is detected before the operation input
         if (opsArr.length > 0 && currentNumArr.length > 0) {
-            numsArr.push(parseFloat(currentNumArr.join("")));
+            numsArr.push(parseFloat(currentNumArr.join("")) * percentageOverwrite);
         
             while (opsArr.length > opLvl) {
                 const operator  = opsArr.pop();
@@ -107,6 +108,7 @@ ops.forEach(element => {
         opsArr.push(currentOp);
         currentResult = numsArr.pop();
         currentNumArr.splice(0);
+        percentageOverwrite = 1;
         display.textContent = currentResult;
 
     })
@@ -117,7 +119,7 @@ equals.addEventListener("click", () => {
 
     // A number input is detected before a `=` press
     if (currentNumArr.length > 0) {
-        currentNum = parseFloat(currentNumArr.join(""));
+        currentNum = parseFloat(currentNumArr.join("")) * percentageOverwrite;
     } 
     numsArr.push(currentNum)
     
@@ -139,6 +141,8 @@ equals.addEventListener("click", () => {
     currentResult = numsArr.pop();
     display.textContent = currentResult;
     currentNumArr.splice(0);
+    percentageOverwrite = 1;
+
 })
 
 clear.addEventListener("click", ()=> {
@@ -148,11 +152,12 @@ clear.addEventListener("click", ()=> {
         if (opsArr == 0) {
             currentResult = 0;
         }
-        display.textContent = 0;
+        display.textContent = 0;    
         clear.textContent = "AC";
     } else {
         reset();
     }
+    percentageOverwrite = 1;
 })
 
 plusMinusConvert.addEventListener("click", () => {
@@ -172,6 +177,17 @@ plusMinusConvert.addEventListener("click", () => {
             currentNumArr.unshift("-");
         }
         display.textContent = currentNumArr.join("");
+
+    }
+})
+
+percentageConvert.addEventListener("click", () => {
+    if (currentNumArr.length == 0) {
+        currentResult = currentResult * 0.01;
+        display.textContent = currentResult;
+    } else {
+        percentageOverwrite = percentageOverwrite * 0.01;
+        display.textContent = parseFloat(currentNumArr.join("")) * percentageOverwrite;
 
     }
 })
