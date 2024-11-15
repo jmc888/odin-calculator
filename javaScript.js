@@ -40,6 +40,7 @@ const OP_STRING_TO_FUNCTION = {"add": add, "subtract": subtract, "multiply": mul
 const BASE_LVL_OPERATORS = ["add", "subtract"];
 
 numbers = document.querySelectorAll(".numbers");
+dot = document.getElementById("dot");
 display = document.getElementById("display");
 ops = document.querySelectorAll(".operators");
 equals = document.getElementById("equals");
@@ -49,11 +50,21 @@ numbers.forEach(element => {
     element.addEventListener("click", (event) => {
         const num = event.target.textContent;
         currentNumArr.push(num);
-        display.textContent = parseInt(currentNumArr.join(""));
+        display.textContent = currentNumArr.join("");
         clear.textContent = "C";
     })
 });
 
+dot.addEventListener("click", ()=> {
+    if (!currentNumArr.includes(".")) {
+            if (currentNumArr.length == 0) {
+                currentNumArr.push("0");
+            } 
+            currentNumArr.push(".");
+            display.textContent = currentNumArr.join("");
+            clear.textContent = "C";
+        }
+})
 
 ops.forEach(element => {
     element.addEventListener("click", () => {
@@ -79,7 +90,7 @@ ops.forEach(element => {
         // Operation input does not immediately follow a `=` press
         // And a number input is detected before the operation input
         if (opsArr.length > 0 && currentNumArr.length > 0) {
-            numsArr.push(parseInt(currentNumArr.join("")));
+            numsArr.push(parseFloat(currentNumArr.join("")));
         
             while (opsArr.length > opLvl) {
                 const operator  = opsArr.pop();
@@ -102,7 +113,7 @@ equals.addEventListener("click", () => {
 
     // A number input is detected before a `=` press
     if (currentNumArr.length > 0) {
-        currentNum = parseInt(currentNumArr.join(""));
+        currentNum = parseFloat(currentNumArr.join(""));
     } 
     numsArr.push(currentNum)
     
