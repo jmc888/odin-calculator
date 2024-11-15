@@ -3,7 +3,7 @@ body {
     justify-content: center;
     background-color: #D9D9D9;
     font-size: 3em;
-    font-family:Arial, Helvetica, sans-serif;
+    font-family: Arial, Helvetica, sans-serif;
     color: #F2F2F2
 }
 
@@ -52,15 +52,18 @@ div {
     border-radius: 20px 20px;
 }
 
-.numbers, #dot {
+.numbers,
+#dot {
     background-color: #588C74;
 }
 
-.operators, #equals {
+.operators,
+#equals {
     background-color: #735368;
 }
 
-#clear, .utils {
+#clear,
+.utils {
     background-color: #D96E30;
 }
 
