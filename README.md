@@ -7,7 +7,7 @@ This calculator should behave the same as the simple calculator on your iOS devi
 
 ### Basic Requirements
 
-- Support add, subtract, multiply and divide operations for integer and float (Not yet!) input.
+- Support add, subtract, multiply and divide operations for integer and float input.
 - Display result in integer when there is no decimal point; otherwise, round the result to the maximum digits that fit in the display box.
 - Display the latest result from the current level of operations even before a `=` button is clicked.
 - Handle order of operations elegantly before a `=` button is clicked, that multiply and divide have higher precedence than add and subtract.
@@ -25,5 +25,5 @@ This calculator should behave the same as the simple calculator on your iOS devi
 - Click `+`/`-`/`*`/`/` followed by `=`: perform the operation on top of the displayed result.
 - Click any of the numeric buttons followed by `=`: discard the current result and start a new operation.
 - Click `C` after `=` and then click on `=` again: clear out the current results and reset it to 0; repeat the last operation.
-- Click multiple `.` when input the number: only recognize the first `.` input and discard the following. (Not Yet!)
-- Input `0` `.` `1` should be equivalent to `.` `1`.  (Not Yet!)
+- Click multiple `.` when input the number: only recognize the first `.` input and discard the following.
+- Input `0` `.` `1` should be equivalent to `.` `1`.
