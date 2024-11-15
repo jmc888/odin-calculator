@@ -30,7 +30,8 @@ reset = () => {
 
 let currentResult = 0;
 let currentOp = add;
-let currentNum = 0; 
+let currentNum = 0;
+let percentageOverwrite = 1;
 
 const currentNumArr = [];
 const numsArr = [];
@@ -39,19 +40,23 @@ const opsArr = [];
 const OP_STRING_TO_FUNCTION = {"add": add, "subtract": subtract, "multiply": multiply, "divide": divide};
 const BASE_LVL_OPERATORS = ["add", "subtract"];
 
-numbers = document.querySelectorAll(".numbers");
-dot = document.getElementById("dot");
-display = document.getElementById("display");
-ops = document.querySelectorAll(".operators");
-equals = document.getElementById("equals");
-clear = document.getElementById("clear");
+const numbers = document.querySelectorAll(".numbers");
+const dot = document.getElementById("dot");
+const display = document.getElementById("display");
+const ops = document.querySelectorAll(".operators");
+const equals = document.getElementById("equals");
+const clear = document.getElementById("clear");
+const plusMinusConvert = document.getElementById("plus-minus-convert");
+const percentageConvert = document.getElementById("percentage-convert");
 
 numbers.forEach(element => {
     element.addEventListener("click", (event) => {
         const num = event.target.textContent;
-        currentNumArr.push(num);
-        display.textContent = currentNumArr.join("");
-        clear.textContent = "C";
+        if (!(currentNumArr.length == 0 && num == "0")) {
+            currentNumArr.push(num);
+            display.textContent = currentNumArr.join("");
+            clear.textContent = "C";
+        } 
     })
 });
 
@@ -90,7 +95,7 @@ ops.forEach(element => {
         // Operation input does not immediately follow a `=` press
         // And a number input is detected before the operation input
         if (opsArr.length > 0 && currentNumArr.length > 0) {
-            numsArr.push(parseFloat(currentNumArr.join("")));
+            numsArr.push(parseFloat(currentNumArr.join("")) * percentageOverwrite);
         
             while (opsArr.length > opLvl) {
                 const operator  = opsArr.pop();
@@ -103,6 +108,7 @@ ops.forEach(element => {
         opsArr.push(currentOp);
         currentResult = numsArr.pop();
         currentNumArr.splice(0);
+        percentageOverwrite = 1;
         display.textContent = currentResult;
 
     })
@@ -113,7 +119,7 @@ equals.addEventListener("click", () => {
 
     // A number input is detected before a `=` press
     if (currentNumArr.length > 0) {
-        currentNum = parseFloat(currentNumArr.join(""));
+        currentNum = parseFloat(currentNumArr.join("")) * percentageOverwrite;
     } 
     numsArr.push(currentNum)
     
@@ -135,6 +141,8 @@ equals.addEventListener("click", () => {
     currentResult = numsArr.pop();
     display.textContent = currentResult;
     currentNumArr.splice(0);
+    percentageOverwrite = 1;
+
 })
 
 clear.addEventListener("click", ()=> {
@@ -144,9 +152,42 @@ clear.addEventListener("click", ()=> {
         if (opsArr == 0) {
             currentResult = 0;
         }
-        display.textContent = 0;
+        display.textContent = 0;    
         clear.textContent = "AC";
     } else {
         reset();
+    }
+    percentageOverwrite = 1;
+})
+
+plusMinusConvert.addEventListener("click", () => {
+    if (currentNumArr.length == 0) {
+        if (display.textContent === "0") {
+            display.textContent = "-0";
+        } else if (display.textContent === "-0"){
+            display.textContent = "0";
+        } else {
+            currentResult = -currentResult;
+            display.textContent = currentResult;
+        }
+    } else {
+        if (currentNumArr.includes("-")) {
+            currentNumArr.shift();
+        } else {
+            currentNumArr.unshift("-");
+        }
+        display.textContent = currentNumArr.join("");
+
+    }
+})
+
+percentageConvert.addEventListener("click", () => {
+    if (currentNumArr.length == 0) {
+        currentResult = currentResult * 0.01;
+        display.textContent = currentResult;
+    } else {
+        percentageOverwrite = percentageOverwrite * 0.01;
+        display.textContent = parseFloat(currentNumArr.join("")) * percentageOverwrite;
+
     }
 })
