@@ -11,9 +11,7 @@ multiply = (a, b) => {
 }
 
 divide = (a, b) => {
-    if (b == 0) {
-        return "Error";
-    }
+
     return a / b;
 }
 
@@ -21,90 +19,100 @@ operate = (callback, a, b) => {
     return callback(a, b);
 }
 
+reset = () => {
+    currentResult = 0;
+    currentNum = 0; 
+    numsArr.splice(0);
+    opsArr.splice(0);
+    opsArr.push(add);
+    display.textContent = currentResult;
+}
+
 let currentResult = 0;
 let currentOp = add;
+let currentNum = 0; 
 
-const currentNum = [];
+const currentNumArr = [];
 const numsArr = [];
-const opsArr = [add];
-const FIRST_LVL_OPERATORS = [add, subtract];
-const SECOND_LVL_OPERATORS = [multiply, divide];
+const opsArr = [];
+
+const OP_STRING_TO_FUNCTION = {"add": add, "subtract": subtract, "multiply": multiply, "divide": divide};
+const BASE_LVL_OPERATORS = ["add", "subtract"];
 
 numbers = document.querySelectorAll(".numbers");
 display = document.getElementById("display");
-opsLvl1 = document.querySelectorAll(".operators-lvl1");
-opsLvl2 = document.querySelectorAll(".operators-lvl2");
+ops = document.querySelectorAll(".operators");
 equals = document.getElementById("equals");
-
+clear = document.getElementById("clear");
 
 numbers.forEach(element => {
     element.addEventListener("click", (event) => {
         const num = event.target.textContent;
-        currentNum.push(num);
-
-        display.textContent = parseInt(currentNum.join(""));
+        currentNumArr.push(num);
+        display.textContent = parseInt(currentNumArr.join(""));
+        clear.textContent = "C";
     })
 });
 
 
-opsLvl1.forEach(element => {
+ops.forEach(element => {
     element.addEventListener("click", () => {
+        const opDivId = element.id;
+        const opLvl = BASE_LVL_OPERATORS.includes(opDivId) ? 0: 1;
+        currentOp = OP_STRING_TO_FUNCTION[opDivId];
+
+        // A `=` press followed by a number input
+        if (opsArr.length == 0 && currentNumArr.length > 0){ 
+            reset();
+        }
+
         numsArr.push(currentResult);
-        if (opsArr.length > 0) {
-            numsArr.push(parseInt(currentNum.join("")));
-        }
-        currentOp = element.id == "add"? add: subtract;
 
-        while (opsArr.length > 0) {
-            const operator  = opsArr.pop();
-            const lastNum = numsArr.pop();
-            const prevNum = numsArr.pop();
-            numsArr.push(operate(operator, prevNum, lastNum));
-        }
-        opsArr.push(currentOp);
+        // No number input before operation
+        if (currentNumArr.length == 0) { 
+            currentNum = currentResult;
+            if (opsArr.length > 0) {
+                opsArr.pop();
+            }
+        } 
 
-        currentResult = numsArr.pop();
-        console.log(currentResult);
-        display.textContent = currentResult;
-        currentNum.splice(0);
-
-    })
-});
-
-opsLvl2.forEach(element => {
-    element.addEventListener("click", () => {
-        currentOp = element.id == "multiply"? multiply: divide;
-        numsArr.push(currentResult);
-        if (opsArr.length > 0) {
-            numsArr.push(parseInt(currentNum.join("")));
-        }
-
-        while (opsArr.length > 1) {
-            const operator  = opsArr.pop();
-            const lastNum = numsArr.pop();
-            const prevNum = numsArr.pop();
-            numsArr.push(operate(operator, prevNum, lastNum));
-        }
+        // Operation input does not immediately follow a `=` press
+        // And a number input is detected before the operation input
+        if (opsArr.length > 0 && currentNumArr.length > 0) {
+            numsArr.push(parseInt(currentNumArr.join("")));
         
+            while (opsArr.length > opLvl) {
+                const operator  = opsArr.pop();
+                const lastNum = numsArr.pop();
+                const prevNum = numsArr.pop();
+                numsArr.push(operate(operator, prevNum, lastNum));
+            }
+        } 
+
         opsArr.push(currentOp);
-
         currentResult = numsArr.pop();
-        console.log(currentResult);
-
+        currentNumArr.splice(0);
         display.textContent = currentResult;
-        currentNum.splice(0);
 
     })
 });
 
 equals.addEventListener("click", () => {
     numsArr.push(currentResult);
-    numsArr.push(parseInt(currentNum.join("")));
+
+    // A number input is detected before a `=` press
+    if (currentNumArr.length > 0) {
+        currentNum = parseInt(currentNumArr.join(""));
+    } 
+    numsArr.push(currentNum)
+    
+    // Consecutive `=` press
     if (opsArr.length == 0) {
-        const lastNum = numsArr.pop();
-        const prevNum = numsArr.pop();
-        numsArr.push(operate(currentOp, prevNum, lastNum));
+        const lastInput = numsArr.pop();
+        const preResult = numsArr.pop();
+        numsArr.push(operate(currentOp, preResult, lastInput));
     } else {
+        // Clear out all operations in the operation stack
         while (opsArr.length > 0) {
             const operator  = opsArr.pop();
             const lastNum = numsArr.pop();
@@ -114,7 +122,20 @@ equals.addEventListener("click", () => {
     }
 
     currentResult = numsArr.pop();
-    console.log(opsArr);
-    console.log(numsArr);
     display.textContent = currentResult;
+    currentNumArr.splice(0);
+})
+
+clear.addEventListener("click", ()=> {
+    if (clear.textContent == "C") {
+        currentNumArr.splice(0);
+        // Clear after `=` press to also result current result
+        if (opsArr == 0) {
+            currentResult = 0;
+        }
+        display.textContent = 0;
+        clear.textContent = "AC";
+    } else {
+        reset();
+    }
 })
