@@ -39,19 +39,23 @@ const opsArr = [];
 const OP_STRING_TO_FUNCTION = {"add": add, "subtract": subtract, "multiply": multiply, "divide": divide};
 const BASE_LVL_OPERATORS = ["add", "subtract"];
 
-numbers = document.querySelectorAll(".numbers");
-dot = document.getElementById("dot");
-display = document.getElementById("display");
-ops = document.querySelectorAll(".operators");
-equals = document.getElementById("equals");
-clear = document.getElementById("clear");
+const numbers = document.querySelectorAll(".numbers");
+const dot = document.getElementById("dot");
+const display = document.getElementById("display");
+const ops = document.querySelectorAll(".operators");
+const equals = document.getElementById("equals");
+const clear = document.getElementById("clear");
+const plusMinusConvert = document.getElementById("plus-minus-convert");
+const percentageConvert = document.getElementById("percentage-convert");
 
 numbers.forEach(element => {
     element.addEventListener("click", (event) => {
         const num = event.target.textContent;
-        currentNumArr.push(num);
-        display.textContent = currentNumArr.join("");
-        clear.textContent = "C";
+        if (!(currentNumArr.length == 0 && num == "0")) {
+            currentNumArr.push(num);
+            display.textContent = currentNumArr.join("");
+            clear.textContent = "C";
+        } 
     })
 });
 
@@ -148,5 +152,26 @@ clear.addEventListener("click", ()=> {
         clear.textContent = "AC";
     } else {
         reset();
+    }
+})
+
+plusMinusConvert.addEventListener("click", () => {
+    if (currentNumArr.length == 0) {
+        if (display.textContent === "0") {
+            display.textContent = "-0";
+        } else if (display.textContent === "-0"){
+            display.textContent = "0";
+        } else {
+            currentResult = -currentResult;
+            display.textContent = currentResult;
+        }
+    } else {
+        if (currentNumArr.includes("-")) {
+            currentNumArr.shift();
+        } else {
+            currentNumArr.unshift("-");
+        }
+        display.textContent = currentNumArr.join("");
+
     }
 })
