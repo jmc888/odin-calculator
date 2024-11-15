@@ -1,6 +1,8 @@
 # odin-calculator
 Odin JavaScript Project - Calculator
 
+![Screenshots](./screenshots/calculator.png "Calculator")
+
 ## Requirements
 
 This calculator should behave the same as the simple calculator on your iOS device.
