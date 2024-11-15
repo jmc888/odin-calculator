@@ -44,7 +44,14 @@ div {
     justify-content: center;
     align-items: center;
     margin: 3px;
-    user-select: none;
+    -webkit-user-select: none;
+    -moz-user-select: none;
+    -ms-user-select: none;
+    user-select: none;   
+}
+
+.btn:hover {
+    cursor: pointer;
 }
 
 #zero {
