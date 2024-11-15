@@ -26,6 +26,14 @@ reset = () => {
     opsArr.splice(0);
     opsArr.push(add);
     display.textContent = currentResult;
+    resetOpColor();
+}
+
+resetOpColor = () => {
+    ops.forEach(element => {
+        element.style.backgroundColor = OP_DEFAULT_COLOR;
+
+    })
 }
 
 let currentResult = 0;
@@ -38,6 +46,9 @@ const numsArr = [];
 const opsArr = [];
 
 const OP_STRING_TO_FUNCTION = {"add": add, "subtract": subtract, "multiply": multiply, "divide": divide};
+const OP_CLICK_ON_COLOR = "#F2809F"
+const OP_DEFAULT_COLOR = "#735368"
+
 const BASE_LVL_OPERATORS = ["add", "subtract"];
 
 const numbers = document.querySelectorAll(".numbers");
@@ -56,7 +67,8 @@ numbers.forEach(element => {
             currentNumArr.push(num);
             display.textContent = currentNumArr.join("");
             clear.textContent = "C";
-        } 
+        }
+        resetOpColor();
     })
 });
 
@@ -69,6 +81,8 @@ dot.addEventListener("click", ()=> {
             display.textContent = currentNumArr.join("");
             clear.textContent = "C";
         }
+    resetOpColor();
+
 })
 
 ops.forEach(element => {
@@ -109,7 +123,10 @@ ops.forEach(element => {
         currentResult = numsArr.pop();
         currentNumArr.splice(0);
         percentageOverwrite = 1;
-        display.textContent = currentResult;
+        display.textContent = isFinite(currentResult) ? currentResult: "ERROR";
+
+        resetOpColor();
+        element.style.backgroundColor = OP_CLICK_ON_COLOR;
 
     })
 });
@@ -139,9 +156,10 @@ equals.addEventListener("click", () => {
     }
 
     currentResult = numsArr.pop();
-    display.textContent = currentResult;
+    display.textContent = isFinite(currentResult) ? currentResult: "ERROR";
     currentNumArr.splice(0);
     percentageOverwrite = 1;
+    resetOpColor();
 
 })
 
@@ -166,6 +184,8 @@ plusMinusConvert.addEventListener("click", () => {
             display.textContent = "-0";
         } else if (display.textContent === "-0"){
             display.textContent = "0";
+        } else if (!isFinite(currentResult)) {
+            display.textContent = "ERROR";
         } else {
             currentResult = -currentResult;
             display.textContent = currentResult;
@@ -184,7 +204,7 @@ plusMinusConvert.addEventListener("click", () => {
 percentageConvert.addEventListener("click", () => {
     if (currentNumArr.length == 0) {
         currentResult = currentResult * 0.01;
-        display.textContent = currentResult;
+        display.textContent = isFinite(currentResult) ? currentResult: "ERROR";
     } else {
         percentageOverwrite = percentageOverwrite * 0.01;
         display.textContent = parseFloat(currentNumArr.join("")) * percentageOverwrite;
